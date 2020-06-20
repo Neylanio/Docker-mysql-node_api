@@ -4,13 +4,13 @@ const mysql = require('mysql');
 const app = express();
 
 const connection = mysql.createConnection({
-  host: '172.17.0.3',
+  host: '172.17.0.2',
   user: 'root',
-  password: '',
-  database: 'programadorabordo'
+  password: 'programadorabordo',
+  database: 'store'
 });
 
-connection.connect();
+// connection.connect();
 
 app.get('/products', function (request, response){
 
