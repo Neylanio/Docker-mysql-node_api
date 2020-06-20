@@ -1,0 +1,83 @@
+Commands:
+
+/ Default commands: 
+    - 'docker image list'         -> p/ imagens disponiveis p/ uso
+    - 'docker ps'                 -> p/ listar as imagem de pé
+    - 'docker ps -a'              -> p/ listar todas as imagens de pé ou não mais
+    - 'docker stop [nome-imagem]' -> p/ parar uma imagem que está de pé
+    - 'docker start [nome-imagem]' -> p/ parar iniciar uma imagem que fora parada
+--------------------------------------------------------------------------------------------------------
+
+/ Mysql
+
+1- 'docker build -t mysql-image -f api/db/Dockerfile .' -> Baixar imagem e construir a nossa propria
+
+    OBS: Usar o comando no diretório raiz do projeto. '.' indica que o contexto p/ gerar imagem vai ser da pasta que estou executando o comando agora
+
+
+
+2- 'docker run -d --rm --name mysql-container mysql-image' -> Criar container que vai usar a imagem que acabamos de criar -> 
+
+    OBS: '-d' significa que vamos executar em background, onde o nosso terminal nao vai ficar preso na exibicao de informacoes que o container disponibiliza, deixando usar esta aba do terminal enquanto o container estiver de pé. '--rm' significa que se o container ja existir o mesmo sera removido e recriado
+
+
+
+3- 'docker exec -i mysql-container mysql -uroot -pprogramadorabordo < api/db/script.sql' -> Comando para executar os scripts do file 'api/db/script.sql'
+
+    OBS: 'exec' executar comando em um container que está de pé. '-i' usando comando em modo interativo, nesse caso o shell
+
+
+4- 'docker exec -it mysql-container /bin/bash' -> Comando p/ acessar o container por meio do terminal
+
+    OBS: '-it' usando ainda o modo interativo do '-i' e o terminal com o 't' 
+
+
+5- 'mysql -uroot -pprogramadorabordo' -> Comando para acessar o mysql
+
+    OBS: '-uroot' '-u' + user e '-pprogramadorabordo' '-p' + senha 
+
+
+6- 'docker run -d -v $(pwd)/api/db/data:/var/lib/mysql --rm --name mysql-container mysql-image' -> P/ recuperar caso tenha parado o container. Sempre que der o STOP no container o mesmo apagará todas as informacoes e scripts antes adicionados, dai cabe a adicionar esse comando para recuperar. Depois utilize o comando '3'
+
+    OBS: Tudo que voce faz no container tambem e feito no seu host
+
+------------------------------------------------------------------------------------------
+
+/ NodeJS
+
+1- Acessar o folder 'api'
+
+2- 'npm init' -> p/ inicar o node
+
+3- 'npm install --save-dev nodemon' -> p/ que a aplicacao fique sempre usando o reload caso haja alguma alteracao no codigo
+
+4- 'npm install --save express mysql' -> p/ trabalhar com as rotas e com o driver do mysql
+
+5- 'docker inspect mysql-container' -> p/ pegar pegar o ip(em IPAdress) que o container do mysql utiliza e colocar la em host no './src/index.js'
+
+6- No arquivo './api/Dockerfile' altere a versão do node para a versao do node da sua maquina
+
+    OBS: 'WORKDIR' é o folder onde se encontrará nossos arquivos .js
+
+
+7- 'docker build -t node-image -f api/Dockerfile .' -> Baixar imagem e construir a nossa propria
+
+    OBS: Usar comando no diretorio raiz do projeto.
+
+
+8- 'docker run -d -v $(pwd)/api:/home/node/app -p 3001:3001 --rm --name node-container node-image' -> Executar imagem dentro de um container
+
+    OBS: Usar comando no diretório raiz do projeto. '-p' significa colocar o container pra executar na porta tal e o host na porta tal
+
+
+
+LINKS: 
+
+    * https://hub.docker.com/_/mysql
+    * https://hub.docker.com/_/node
+
+
+
+
+
+
